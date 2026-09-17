@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Vienes conmigo? 💌</title>
+<style>
+/* Si estás leyendo esto, lograste ver el mensaje oculto */
+/* Escríbeme a mi wsp solo la palabra "cordial" para saber que lo leíste*/
+/* El mensaje es el siguiente... */
+/* Me encantas mucho, ojitos. Conocerte ha sido lo más lindo y divertido que me ha pasado en mucho tiempo  */
+/* Hice todo esto porque pienso que aprecias los detalles tanto como yo */
+/* Espero te guste, te quiero <3 */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    width: 100%;
+    font-family: 'Georgia', serif;
+    overflow: hidden;
+  }
+
+  /* ===== FONDO CON IMAGEN REAL, AUTOAJUSTABLE ===== */
+  body {
+    background-color: #1a0d05;
+    background-image: url('fondo.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    transition: background-image 0.6s ease-in-out;
+  }
+
+  body::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center,
+      rgba(0,0,0,0.15) 0%,
+      rgba(0,0,0,0.45) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  body.pantalla-2-activa {
+    background-image: url('fondo2.jpg');
+  }
+
+  /* ===== TARJETA ===== */
+  .tarjeta {
+    position: relative;
+    z-index: 10;
+    background: #f5ecd7;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(180,140,90,0.10) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(180,140,90,0.10) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(255,250,235,0.5) 0%, transparent 70%);
+    border-radius: 12px;
+    padding: 35px 40px 45px;
+    max-width: 560px;
+    width: 100%;
+    text-align: center;
+    box-shadow:
+      0 0 0 8px #f5ecd7,
+      0 0 0 10px #d4c4a0,
+      0 25px 70px rgba(0,0,0,0.8),
+      0 0 100px rgba(255,160,60,0.3);
+    border: 2px solid #d4c4a0;
+    animation: aparecer 0.8s ease-out;
+  }
+
+  @keyframes aparecer {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .tarjeta::before, .tarjeta::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #b8a67d;
+  }
+  .tarjeta::before {
+    top: 12px; left: 12px;
+    border-right: none; border-bottom: none;
+    border-radius: 8px 0 0 0;
+  }
+  .tarjeta::after {
+    bottom: 12px; right: 12px;
+    border-left: none; border-top: none;
+    border-radius: 0 0 8px 0;
+  }
+
+  /* ===== PAREJA DE GALLETAS PICARÁS (ESTILO LIMA) ===== */
+.pareja-galletas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 18px;
+  position: relative;
+}
+
+/* Corazón entre las galletas — BOTÓN DE DESCARGA */
+.corazon-boton {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: none;
+  border: none;
+  color: #c0392b;
+  font-size: 1.4em;
+  cursor: pointer;
+  z-index: 10;
+  padding: 0;
+  line-height: 1;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+  animation: latir 1.2s infinite ease-in-out;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.corazon-boton:hover {
+  color: #e74c3c;
+  animation-play-state: paused;
+  transform: translateX(-50%) scale(1.35);
+}
+.corazon-boton .tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: #3a2418;
+  color: #f5ecd7;
+  font-size: 0.55em;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  font-family: Arial, sans-serif;
+  font-weight: normal;
+}
+.corazon-boton:hover .tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(12px);
+}
+@keyframes latir {
+  0%, 100% { transform: translateX(-50%) scale(1); }
+  50%      { transform: translateX(-50%) scale(1.25); }
+}
+
+/* ===== BASE DE LA GALLETA (forma de dona) ===== */
+.galleta {
+  width: 85px;
+  height: 85px;
+  position: relative;
+  border-radius: 50%;
+  /* Masa dorada de galleta artesanal */
+  background: radial-gradient(circle at 35% 30%,
+    #e8b06a 0%,
+    #d49a52 45%,
+    #b87a34 78%,
+    #8f5a1f 100%);
+  box-shadow:
+    inset -8px -8px 14px rgba(110,60,15,0.5),
+    inset 6px 6px 12px rgba(255,220,150,0.4),
+    0 8px 16px rgba(0,0,0,0.35);
+}
+
+/* Agujero central (forma de dona) — mismo color que la tarjeta */
+.galleta::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #f5ecd7;   /* 👈 mismo color que el fondo de la tarjeta */
+  box-shadow:
+    inset 0 4px 6px rgba(0,0,0,0.25),
+    inset 0 -2px 4px rgba(255,255,255,0.5),
+    0 0 0 3px #a8712f,
+    0 0 0 4px rgba(0,0,0,0.15);
+  z-index: 1;
+}
+
+/* Chispitas en la masa */
+.galleta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle 2px at 22% 25%, #8f5a1f 100%, transparent 100%),
+    radial-gradient(circle 2px at 70% 18%, #8f5a1f 100%, transparent 100%),
+    radial-gradient(circle 2px at 78% 72%, #8f5a1f 100%, transparent 100%),
+    radial-gradient(circle 2px at 20% 75%, #8f5a1f 100%, transparent 100%),
+    radial-gradient(circle 1.5px at 50% 12%, #8f5a1f 100%, transparent 100%),
+    radial-gradient(circle 1.5px at 12% 50%, #8f5a1f 100%, transparent 100%),
+    radial-gradient(circle 1.5px at 88% 48%, #8f5a1f 100%, transparent 100%),
+    radial-gradient(circle 1.5px at 48% 90%, #8f5a1f 100%, transparent 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ===== CARITA (en la mitad inferior de la masa, justo debajo del chocolate) ===== */
+.ojo {
+  position: absolute;
+  width: 6px;
+  height: 8px;
+  background: #2a1508;
+  border-radius: 50%;
+  top: 52%;              /* 👈 justo debajo del chocolate */
+  z-index: 6;
+}
+.ojo.izq { left: 24%; }
+.ojo.der { right: 24%; }
+
+.mejilla {
+  position: absolute;
+  width: 11px;
+  height: 7px;
+  background: #f5a0a0;
+  border-radius: 50%;
+  top: 62%;
+  opacity: 0.8;
+  z-index: 6;
+  filter: blur(1px);
+}
+.mejilla.izq { left: 15%; }
+.mejilla.der { right: 15%; }
+
+.boca {
+  position: absolute;
+  width: 13px;
+  height: 7px;
+  border-bottom: 2px solid #2a1508;
+  border-radius: 0 0 50% 50%;
+  top: 64%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+}
+
+/* ===== MOÑO NEGRO (niño) ===== */
+.moño-negro {
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 12px;
+  z-index: 7;
+}
+.moño-negro::before,
+.moño-negro::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  transform: translateY(-50%);
+}
+.moño-negro::before {
+  left: 0;
+  border-left: 12px solid #1a1a1a;
+}
+.moño-negro::after {
+  right: 0;
+  border-right: 12px solid #1a1a1a;
+}
+.moño-negro .nudo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 7px;
+  height: 9px;
+  background: #1a1a1a;
+  border-radius: 50%;
+  box-shadow: inset -1px -1px 2px rgba(255,255,255,0.15);
+  z-index: 2;
+}
+
+/* ===== MOÑO ROSA (niña) ===== */
+.moño-rosa {
+  position: absolute;
+  top: -8px;
+  right: 4px;
+  width: 22px;
+  height: 16px;
+  z-index: 8;
+  transform: rotate(15deg);
+}
+.moño-rosa::before,
+.moño-rosa::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 12px;
+  height: 15px;
+  background: radial-gradient(circle at 30% 30%, #ff6b8a, #c2185b 80%);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.moño-rosa::before {
+  left: 0;
+  transform: rotate(-25deg);
+}
+.moño-rosa::after {
+  right: 0;
+  transform: rotate(25deg);
+}
+.moño-rosa .nudo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 7px;
+  height: 8px;
+  background: #8e1240;
+  border-radius: 50%;
+  box-shadow: inset -1px -1px 2px rgba(255,255,255,0.2);
+  z-index: 2;
+}
+
+/* Pestañas para la niña */
+.pestaña {
+  position: absolute;
+  width: 2px;
+  height: 5px;
+  background: #2a1508;
+  top: 48%;              /* 👈 justo debajo del chocolate */
+  z-index: 6;
+}
+.pestaña.izq { left: 23%; transform: rotate(-18deg); }
+.pestaña.der { right: 23%; transform: rotate(18deg); }
+
+  /* ===== TEXTO ===== */
+  h1 {
+    font-family: 'Georgia', serif;
+    font-size: 2.1em;
+    color: #3a2418;
+    margin-bottom: 18px;
+    font-weight: normal;
+    letter-spacing: 1px;
+  }
+
+  .texto {
+    color: #5a4030;
+    font-size: 1.05em;
+    line-height: 1.7;
+    margin-bottom: 25px;
+    font-style: italic;
+  }
+
+  /* ===== BOTONES ===== */
+  .botones {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    margin: 30px 0 20px;
+    flex-wrap: wrap;
+    min-height: 60px;
+    position: relative;
+  }
+
+  .btn-si {
+    background: #3a2418;
+    color: #f5ecd7;
+    border: none;
+    padding: 14px 45px;
+    border-radius: 30px;
+    font-size: 1.2em;
+    font-family: 'Georgia', serif;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 2;
+  }
+  .btn-si:hover {
+    background: #5a3a28;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  }
+  .btn-si:active { transform: scale(0.98); }
+
+  /* Botón NO con FONDO sólido */
+  .btn-no {
+    background: #f5ecd7;
+    color: #3a2418;
+    border: 2px solid #3a2418;
+    padding: 14px 35px;
+    border-radius: 30px;
+    font-size: 1.2em;
+    font-family: 'Georgia', serif;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: transform;
+    z-index: 3;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+
+  .spolier {
+    font-size: 0.85em;
+    color: #8a7060;
+    margin-top: 20px;
+    font-style: italic;
+  }
+
+  /* ===== SEGUNDA PANTALLA ===== */
+  .pantalla-2 { display: none; animation: aparecer 0.8s ease-out; }
+  .pantalla-2.activa { display: block; }
+  .pantalla-1.oculta { display: none; }
+
+  .detalles {
+    background: rgba(255,255,255,0.4);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: left;
+    border: 1px solid #d4c4a0;
+  }
+  .detalle-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    color: #3a2418;
+    font-size: 1em;
+  }
+  .detalle-item .icono {
+    font-size: 1.3em;
+    width: 30px;
+    text-align: center;
+  }
+  .detalle-item strong {
+    display: block;
+    font-size: 0.8em;
+    color: #8a7060;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .btn-calendario {
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    font-family: 'Georgia', serif;
+  }
+  .btn-calendario:hover {
+    background: #333;
+    transform: translateY(-2px);
+  }
+
+  .nota-calendario {
+    font-size: 0.75em;
+    color: #8a7060;
+    margin-top: 8px;
+    font-style: italic;
+  }
+/* ===== BOTÓN REGRESAR (pantalla 2) ===== */
+  .btn-regresar {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    background: transparent;
+    border: none;
+    color: #8a7060;
+    font-size: 0.9em;
+    font-family: 'Georgia', serif;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 20;
+  }
+  .btn-regresar:hover {
+    color: #3a2418;
+    background: rgba(58,36,24,0.08);
+    transform: translateX(-3px);
+  }
+  .btn-regresar:active {
+    transform: translateX(-3px) scale(0.95);
+  }
+  /* Corazones flotantes */
+  .corazones {
+    position: fixed;
+    pointer-events: none;
+    font-size: 1.5em;
+    z-index: 5;
+    animation: flotar 6s linear infinite;
+  }
+  @keyframes flotar {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 0.6; }
+    100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 500px) {
+    .tarjeta { padding: 25px 20px 35px; }
+    h1 { font-size: 1.6em; }
+    .botones { gap: 15px; }
+    .btn-si, .btn-no { padding: 12px 25px; font-size: 1em; }
+    body { background-position: center top; }
+    .galleta { width: 60px; height: 60px; }
+  }
+
+  @media (min-aspect-ratio: 16/9) {
+    body { background-position: center center; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- PANTALLA 1 -->
+  <div class="tarjeta pantalla-1" id="pantalla1">
+    <!-- Pareja de galletas CSS -->
+    <div class="pareja-galletas">
+    <button class="corazon-boton" id="btnDescargar" title="Busca en los comentarios del código">
+  ❤
+  <span class="tooltip">💾 Descargar código fuente</span>
+</button>
+      <!-- Galleta niño (moño negro) -->
+      <div class="galleta">
+        <div class="ojo izq"></div>
+        <div class="ojo der"></div>
+        <div class="mejilla izq"></div>
+        <div class="mejilla der"></div>
+        <div class="boca"></div>
+        <div class="moño-negro"></div>
+      </div>
+      <!-- Galleta niña (moño rosa) -->
+      <div class="galleta">
+        <div class="pestaña izq"></div>
+        <div class="pestaña der"></div>
+        <div class="ojo izq"></div>
+        <div class="ojo der"></div>
+        <div class="mejilla izq"></div>
+        <div class="mejilla der"></div>
+        <div class="boca"></div>
+        <div class="moño-rosa"></div>
+      </div>
+    </div>
+
+    <h1>¿Vienes conmigo?</h1>
+    <p class="texto">
+      Esta invitación oculta varios detalles...<br>
+      Algunos te darán pista de adónde iremos<br>
+      Otros son pequeños guiños a esas cosas que me cuentas<br>
+      Y, por último...<br>
+      hay un mensaje oculto esperando a ser descubierto<br>
+      ¿Podrás encontrarlo?
+    </p>
+
+    <div class="botones" id="contenedorBotones">
+      <button class="btn-si" onclick="irAPantalla2()">Sí ❤️</button>
+      <button class="btn-no" id="btnNo">No 😩</button>
+    </div>
+
+    <p class="spolier">
+      Spoiler: Imposible decir que no...<br>
+       
+    </p>
+  </div>
+
+  <!-- PANTALLA 2 -->
+  <div class="tarjeta pantalla-2" id="pantalla2">
+    <div class="pareja-galletas">
+      <div class="galleta">      
+        <div class="ojo izq"></div>
+        <div class="ojo der"></div>
+        <div class="mejilla izq"></div>
+        <div class="mejilla der"></div>
+        <div class="boca"></div>
+        <div class="moño-negro"></div>
+      </div>
+      <div class="galleta">
+        <div class="pestaña izq"></div>
+        <div class="pestaña der"></div>
+        <div class="ojo izq"></div>
+        <div class="ojo der"></div>
+        <div class="mejilla izq"></div>
+        <div class="mejilla der"></div>
+        <div class="boca"></div>
+        <div class="moño-rosa"></div>
+      </div>
+    </div>
+
+    <h1>Sabía que dirías que sí</h1>
+    <p class="texto">
+      Nos vemos mañana<br>
+      Será una noche divertida y<br>
+      habrá galletas pícaras :)<br>      
+    </p>
+
+    <div class="detalles">
+      <div class="detalle-item">
+        <span class="icono">📅</span>
+        <div><strong>Fecha</strong>Viernes, 18 de setiembre de 2026</div>
+      </div>
+      <div class="detalle-item">
+        <span class="icono">🕖</span>
+        <div><strong>Hora</strong>7:00 p.m.</div>
+      </div>
+      <div class="detalle-item">
+        <span class="icono">📍</span>
+        <div><strong>Lugar</strong>Top Secret</div>
+      </div>
+    </div>
+
+    <button class="btn-calendario" onclick="agregarAlCalendario(event)">
+      🗓️ Agregar al calendario 📅
+    </button>
+    <p class="nota-calendario"></p>
+
+    <p class="spolier" style="margin-top:20px;">
+      Can´t wait 💖
+    </p>
+     <!-- Botón regresar a pantalla 1 -->
+    <button class="btn-regresar" onclick="volverAPantalla1()">
+      ← Regresar
+    </button>
+  </div>
+  </div>
+
+<script>
+  /* ===== BOTÓN "NO" QUE HUYE SOLO CUANDO EL MOUSE ESTÁ ENCIMA ===== */
+  const btnNo = document.getElementById('btnNo');
+
+  const COOLDOWN = 350;
+  const DESPLAZAMIENTO = 200;
+  const LIMITE_X = 500;
+  const LIMITE_Y = 300;
+
+  let ultimoMovimiento = 0;
+  let posX = 0, posY = 0;
+
+  btnNo.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+
+  function moverBotonNo(mouseX, mouseY) {
+    const ahora = Date.now();
+    if (ahora - ultimoMovimiento < COOLDOWN) return;
+    ultimoMovimiento = ahora;
+
+    const rect = btnNo.getBoundingClientRect();
+    const centroX = rect.left + rect.width / 2;
+    const centroY = rect.top + rect.height / 2;
+
+    let dx = centroX - mouseX;
+    let dy = centroY - mouseY;
+
+    if (Math.hypot(dx, dy) < 1) {
+      dx = (Math.random() - 0.5) * 2;
+      dy = (Math.random() - 0.5) * 2;
+    }
+
+    const dist = Math.hypot(dx, dy);
+    const dirX = dx / dist;
+    const dirY = dy / dist;
+
+    const angulo = (Math.random() - 0.5) * Math.PI / 2;
+    const cos = Math.cos(angulo);
+    const sin = Math.sin(angulo);
+    const dirFinalX = dirX * cos - dirY * sin;
+    const dirFinalY = dirX * sin + dirY * cos;
+
+    let nuevoX = posX + dirFinalX * DESPLAZAMIENTO;
+    let nuevoY = posY + dirFinalY * DESPLAZAMIENTO;
+
+    nuevoX = Math.max(-LIMITE_X, Math.min(LIMITE_X, nuevoX));
+    nuevoY = Math.max(-LIMITE_Y, Math.min(LIMITE_Y, nuevoY));
+
+    if (nuevoX === LIMITE_X || nuevoX === -LIMITE_X) {
+      nuevoX = posX - dirFinalX * DESPLAZAMIENTO;
+      nuevoX = Math.max(-LIMITE_X, Math.min(LIMITE_X, nuevoX));
+    }
+    if (nuevoY === LIMITE_Y || nuevoY === -LIMITE_Y) {
+      nuevoY = posY - dirFinalY * DESPLAZAMIENTO;
+      nuevoY = Math.max(-LIMITE_Y, Math.min(LIMITE_Y, nuevoY));
+    }
+
+    posX = nuevoX;
+    posY = nuevoY;
+
+    btnNo.style.transform = `translate(${posX}px, ${posY}px)`;
+  }
+
+  document.addEventListener('mousemove', (e) => {
+    if (document.getElementById('pantalla1').classList.contains('oculta')) return;
+
+    const rect = btnNo.getBoundingClientRect();
+    const dentro =
+      e.clientX >= rect.left &&
+      e.clientX <= rect.right &&
+      e.clientY >= rect.top &&
+      e.clientY <= rect.bottom;
+
+    if (dentro) {
+      moverBotonNo(e.clientX, e.clientY);
+    }
+  });
+
+  btnNo.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    moverBotonNo(touch.clientX, touch.clientY);
+  });
+
+  btnNo.addEventListener('click', (e) => {
+    e.preventDefault();
+    const rect = btnNo.getBoundingClientRect();
+    moverBotonNo(rect.left + rect.width / 2, rect.top + rect.height / 2);
+  });
+
+  /* ===== CAMBIO DE PANTALLA Y FONDO ===== */
+  function irAPantalla2() {
+    document.getElementById('pantalla1').classList.add('oculta');
+    document.getElementById('pantalla2').classList.add('activa');
+    document.body.classList.add('pantalla-2-activa');
+  }
+
+  /* ===== VOLVER A PANTALLA 1 ===== */
+  function volverAPantalla1() {
+    document.getElementById('pantalla2').classList.remove('activa');
+    document.getElementById('pantalla1').classList.remove('oculta');
+    document.body.classList.remove('pantalla-2-activa');
+
+    // Resetear el botón "No" a su posición inicial
+    posX = 0;
+    posY = 0;
+    btnNo.style.transition = 'none';
+    btnNo.style.transform = 'translate(0, 0)';
+
+    setTimeout(() => {
+      btnNo.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    }, 50);
+  }
+
+  /* ===== EMOJIS FLOTANTES ===== */
+  let intervaloFlotantes = null;
+  let estilosInyectados = false;
+
+  function inyectarEstilosFlotantes() {
+    if (estilosInyectados) return;
+    estilosInyectados = true;
+
+    const style = document.createElement('style');
+    style.id = 'estilosFlotantes';
+    style.textContent = `
+      @keyframes flotarEmoji {
+        0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+        10%  { opacity: 0.9; }
+        50%  { transform: translateY(-55vh) translateX(25px) rotate(180deg); }
+        90%  { opacity: 0.9; }
+        100% { transform: translateY(-115vh) translateX(-25px) rotate(360deg); opacity: 0; }
+      }
+      @keyframes parpadeoVela {
+        0%, 100% { filter: drop-shadow(0 0 10px rgba(255,180,60,0.9)) drop-shadow(0 0 20px rgba(255,120,20,0.55)); opacity: 1; }
+        25%      { filter: drop-shadow(0 0 16px rgba(255,210,100,1)) drop-shadow(0 0 28px rgba(255,150,40,0.7)); opacity: 0.85; }
+        50%      { filter: drop-shadow(0 0 8px rgba(255,160,40,0.85)) drop-shadow(0 0 18px rgba(255,100,10,0.5)); opacity: 1; }
+        75%      { filter: drop-shadow(0 0 18px rgba(255,220,120,1)) drop-shadow(0 0 30px rgba(255,160,60,0.75)); opacity: 0.9; }
+      }
+      @keyframes girarNota {
+        0%   { transform: rotate(0deg) scale(1); }
+        50%  { transform: rotate(180deg) scale(1.15); }
+        100% { transform: rotate(360deg) scale(1); }
+      }
+      .corazones {
+        position: fixed;
+        bottom: -60px;
+        pointer-events: none;
+        z-index: 5;
+        animation-name: flotarEmoji;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        will-change: transform;
+      }
+      .velita-flotante .emoji-vela {
+        display: inline-block;
+        animation: parpadeoVela 1.2s infinite ease-in-out;
+      }
+      .nota-flotante .emoji-nota {
+        display: inline-block;
+        animation: girarNota 3s infinite linear;
+        color: #ffe9a8;
+        text-shadow: 0 0 10px rgba(255,220,140,0.9);
+      }
+      .corazon-flotante {
+        filter: drop-shadow(0 0 6px rgba(255,120,150,0.6));
+      }
+      .mantequilla-flotante {
+        filter: drop-shadow(0 0 8px rgba(255,220,120,0.7));
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function lanzarCorazones() {
+    const emojis = ['❤️', '💕', '💖', '💗', '🧈', '🧈', '🕯️', '🕯️', '♪', '♫', '♬', '♩', '🍀', '🍀'];
+
+    inyectarEstilosFlotantes();
+
+    function crearElemento() {
+      const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+      const elemento = document.createElement('div');
+      elemento.className = 'corazones';
+
+      if (emoji === '🕯️') {
+        elemento.classList.add('velita-flotante');
+        elemento.innerHTML = '<span class="emoji-vela">🕯️</span>';
+      } else if (emoji === '♪' || emoji === '♫' || emoji === '♬' || emoji === '♩') {
+        elemento.classList.add('nota-flotante');
+        elemento.innerHTML = `<span class="emoji-nota">${emoji}</span>`;
+      } else if (emoji === '🧈') {
+        elemento.classList.add('mantequilla-flotante');
+        elemento.textContent = emoji;
+      } else {
+        elemento.classList.add('corazon-flotante');
+        elemento.textContent = emoji;
+      }
+
+      elemento.style.left = Math.random() * 100 + 'vw';
+      elemento.style.bottom = '-60px';
+
+      const tamaño = 1 + Math.random() * 1.2;
+      elemento.style.fontSize = tamaño + 'em';
+
+      const duracion = 6 + Math.random() * 6;
+      elemento.style.animationDuration = duracion + 's';
+
+      elemento.style.animationDelay = (Math.random() * 2) + 's';
+      elemento.style.opacity = 0.5 + Math.random() * 0.5;
+
+      document.body.appendChild(elemento);
+
+      setTimeout(() => elemento.remove(), (duracion + 3) * 1000);
+    }
+
+    // Crear varios al inicio
+    for (let i = 0; i < 15; i++) {
+      setTimeout(crearElemento, i * 200);
+    }
+
+    // Evitar duplicar el intervalo
+    if (intervaloFlotantes) clearInterval(intervaloFlotantes);
+    intervaloFlotantes = setInterval(() => {
+      crearElemento();
+    }, 700);
+  }
+
+  /* ===== DESCARGAR CÓDIGO FUENTE ===== */
+  function descargarCodigo(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const nombreArchivo = 'index.txt';
+
+    const transformGuardado = btnNo.style.transform;
+    const transitionGuardada = btnNo.style.transition;
+
+    btnNo.style.transform = '';
+    btnNo.style.transition = '';
+
+    const htmlCompleto = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+    btnNo.style.transform = transformGuardado;
+    btnNo.style.transition = transitionGuardada;
+
+    const blob = new Blob([htmlCompleto], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+
+    const enlace = document.createElement('a');
+    enlace.href = url;
+    enlace.download = nombreArchivo;
+    document.body.appendChild(enlace);
+    enlace.click();
+    document.body.removeChild(enlace);
+    URL.revokeObjectURL(url);
+  }
+
+  document.getElementById('btnDescargar').addEventListener('click', descargarCodigo);
+
+ /* ===== AGREGAR AL CALENDARIO (SUSCRIPCIÓN NATIVA iOS) ===== */
+  function agregarAlCalendario(event) {
+    event.preventDefault();
+
+    // ⚠️ IMPORTANTE: sube un archivo .ics a GitHub Gist (o similar)
+    // y pega aquí la URL "raw" (enlace directo al contenido)
+    const urlArchivoICS = 'https://mborda2005.github.io/cita/evento.ics';
+
+    // Convertir a webcal:// para que iPhone abra la app Calendario nativa
+    const urlWebcal = urlArchivoICS.replace(/^https?:\/\//, 'webcal://');
+
+    // Detectar si es iPhone/iPad
+    const esiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (esiOS) {
+      // En iOS: abre la app de Calendario nativa para suscribirse
+      window.location.href = urlWebcal;
+    } else {
+      // En Android/Desktop: descarga el .ics normalmente
+      const enlace = document.createElement('a');
+      enlace.href = urlArchivoICS;
+      enlace.download = 'cita-galletas.ics';
+      document.body.appendChild(enlace);
+      enlace.click();
+      document.body.removeChild(enlace);
+    }
+
+    // Feedback visual en el botón
+    const btn = event.target.closest('.btn-calendario');
+    const textoOriginal = btn.innerHTML;
+    btn.innerHTML = '📅 Abriendo calendario...';
+    btn.style.background = '#2e7d32';
+    setTimeout(() => {
+      btn.innerHTML = textoOriginal;
+      btn.style.background = '#1a1a1a';
+    }, 2500);
+  }
+
+  /* ===== INICIALIZAR EMOJIS AL CARGAR LA PÁGINA ===== */
+  window.addEventListener('load', () => {
+    setTimeout(lanzarCorazones, 300);
+  });
+</script>
+</body>
+</html>
