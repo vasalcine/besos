@@ -228,6 +228,85 @@
   color: #f5ecd7;
 }
 
+/* ===== BOTÓN OCULTAR TARJETA ===== */
+.btn-ocultar {
+  position: absolute;
+  top: 15px;
+  right: 60px;                  /* 👈 a la izquierda del foquito */
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #f5ecd7;
+  border: 2px solid #b8a67d;
+  font-size: 1.1em;
+  cursor: pointer;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.25s ease;
+  box-shadow:
+    0 3px 8px rgba(0,0,0,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.5);
+}
+
+.btn-ocultar:hover {
+  background: #efe0c5;
+  transform: scale(1.08);
+  box-shadow:
+    0 5px 12px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+.btn-ocultar:active {
+  transform: scale(0.95);
+}
+
+/* ===== TARJETA OCULTA ===== */
+.tarjeta.oculta {
+  opacity: 0;
+  transform: scale(0.9);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.tarjeta {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* ===== BOTÓN FLOTANTE PARA MOSTRAR (cuando la tarjeta está oculta) ===== */
+.btn-mostrar {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(245, 236, 215, 0.85);
+  border: 2px solid #b8a67d;
+  font-size: 1.2em;
+  cursor: pointer;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.25s ease;
+  box-shadow:
+    0 4px 14px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.5);
+  backdrop-filter: blur(6px);
+}
+
+.btn-mostrar:hover {
+  background: rgba(245, 236, 215, 1);
+  transform: scale(1.1);
+}
+
+.btn-mostrar.visible {
+  display: flex;
+}
 /* ===== BOTÓN FOCO ===== */
 .btn-foco {
   position: absolute;
@@ -366,6 +445,15 @@
 <body>
 
   <div class="tarjeta">
+  <!-- BOTÓN OCULTAR TARJETA -->
+<button class="btn-ocultar" id="btnOcultar" title="Ocultar tarjeta">
+  👁️
+</button>
+
+<!-- BOTÓN FOCO (ya existente) -->
+<button class="btn-foco" id="btnFoco" title="Instrucciones">
+  💡
+</button>
   <!-- BOTÓN FOCO (arriba derecha) -->
 <button class="btn-foco" id="btnFoco" title="Instrucciones">
   💡
@@ -390,6 +478,7 @@
 </p>
   </div>
 </div>
+</button>
     <!-- ✏️ EDITA AQUÍ EL TEXTO -->
     <p class="texto-principal">
       Escribe aquí el texto que quieras mostrar.<br>
@@ -410,6 +499,10 @@
     <!-- CONTADOR CON RELIEVE -->
     <div class="contador" id="contadorNumero">0</div>
   </div>
+  <!-- BOTÓN FLOTANTE PARA MOSTRAR TARJETA -->
+<button class="btn-mostrar" id="btnMostrar" title="Mostrar tarjeta">
+  👁️‍🗨️
+</button>
 
 <!-- SDK de Firebase (versión compat) -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
@@ -587,6 +680,22 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     panelInstrucciones.classList.remove('abierto');
   }
+});
+/* ===== BOTÓN OCULTAR / MOSTRAR TARJETA ===== */
+const btnOcultar = document.getElementById('btnOcultar');
+const btnMostrar = document.getElementById('btnMostrar');
+const tarjeta = document.querySelector('.tarjeta');
+
+btnOcultar.addEventListener('click', () => {
+  tarjeta.classList.add('oculta');
+  setTimeout(() => {
+    btnMostrar.classList.add('visible');
+  }, 300);
+});
+
+btnMostrar.addEventListener('click', () => {
+  btnMostrar.classList.remove('visible');
+  tarjeta.classList.remove('oculta');
 });
 </script>
 </body>
