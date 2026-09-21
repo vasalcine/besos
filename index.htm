@@ -227,11 +227,169 @@
   background: #4a3020;
   color: #f5ecd7;
 }
+
+/* ===== BOTÓN FOCO ===== */
+.btn-foco {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #f5ecd7;
+  border: 2px solid #b8a67d;
+  font-size: 1.1em;
+  cursor: pointer;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.25s ease;
+  box-shadow:
+    0 3px 8px rgba(0,0,0,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.5);
+}
+
+.btn-foco:hover {
+  background: #efe0c5;
+  transform: scale(1.08) rotate(-10deg);
+  box-shadow:
+    0 5px 12px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+.btn-foco:active {
+  transform: scale(0.95);
+}
+
+/* ===== PANEL DE INSTRUCCIONES ===== */
+.panel-instrucciones {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding: 20px;
+}
+
+.panel-instrucciones.abierto {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.panel-contenido {
+  background: #f5ecd7;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(180,140,90,0.10) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(180,140,90,0.10) 0%, transparent 50%);
+  border-radius: 12px;
+  padding: 35px 30px 30px;
+  max-width: 440px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow:
+    0 0 0 6px #f5ecd7,
+    0 0 0 8px #d4c4a0,
+    0 25px 60px rgba(0,0,0,0.6);
+  border: 2px solid #d4c4a0;
+  animation: aparecerPanel 0.4s ease-out;
+  text-align: left;
+}
+
+@keyframes aparecerPanel {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.panel-contenido h2 {
+  font-family: 'Georgia', serif;
+  color: #3a2418;
+  font-size: 1.4em;
+  margin-bottom: 15px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.panel-contenido p {
+  color: #5a4030;
+  font-size: 0.95em;
+  line-height: 1.6;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+.panel-cerrar {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #8a7060;
+  font-size: 1.2em;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.panel-cerrar:hover {
+  color: #3a2418;
+  background: rgba(58,36,24,0.1);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 500px) {
+  .btn-foco {
+    width: 34px;
+    height: 34px;
+    font-size: 1em;
+    top: 12px;
+    right: 12px;
+  }
+  .panel-contenido {
+    padding: 30px 22px 25px;
+  }
+  .panel-contenido h2 { font-size: 1.2em; }
+  .panel-contenido p { font-size: 0.9em; }
+}
 </style>
 </head>
 <body>
 
   <div class="tarjeta">
+  <!-- BOTÓN FOCO (arriba derecha) -->
+<button class="btn-foco" id="btnFoco" title="Instrucciones">
+  💡
+</button>
+
+<!-- PANEL DE INSTRUCCIONES -->
+<div class="panel-instrucciones" id="panelInstrucciones">
+  <div class="panel-contenido">
+    <button class="panel-cerrar" id="panelCerrar">✕</button>
+    <h2>Instrucciones</h2>
+<p>
+  Usa esto en cualquier momento que desees. Cada clic en "Reclamar" te dará un besito mío en la frente, no hay límites.
+</p>
+<p>
+  También existen multiplicadores que se irán desbloqueando conforme te extrañe más. Estos multiplicadores potenciarán solo el siguiente clic que des para reclamar un beso mío.
+</p>
+<p>
+  Por último, se mostrará un contador que siempre se mantendrá actualizado. Quizá haya un premio al llegar a ciertas cantidades. Aún no te doy el tarifario 🙊
+</p>
+<p>
+  ¡Diviértete!
+</p>
+  </div>
+</div>
     <!-- ✏️ EDITA AQUÍ EL TEXTO -->
     <p class="texto-principal">
       Escribe aquí el texto que quieras mostrar.<br>
@@ -279,10 +437,10 @@
   let multiplicadorActivo = 1;
 
   /* ===== ESCUCHAR CONTADOR EN TIEMPO REAL ===== */
-  contadorRef.on('value', (snapshot) => {
-    const valor = snapshot.val() || 0;
-    contadorNumero.textContent = valor;
-  });
+contadorRef.on('value', (snapshot) => {
+  const valor = snapshot.val() || 0;
+  contadorNumero.textContent = valor.toLocaleString('en-US');
+});
 
   /* ===== ESCUCHAR MULTIPLICADORES EN TIEMPO REAL ===== */
   multiplicadoresRef.on('value', (snapshot) => {
@@ -403,6 +561,33 @@
       contadorRef.set(0);
     }
   });
+  
+  /* ===== BOTÓN FOCO (instrucciones) ===== */
+const btnFoco = document.getElementById('btnFoco');
+const panelInstrucciones = document.getElementById('panelInstrucciones');
+const panelCerrar = document.getElementById('panelCerrar');
+
+btnFoco.addEventListener('click', () => {
+  panelInstrucciones.classList.add('abierto');
+});
+
+panelCerrar.addEventListener('click', () => {
+  panelInstrucciones.classList.remove('abierto');
+});
+
+// Cerrar al hacer clic fuera del panel
+panelInstrucciones.addEventListener('click', (e) => {
+  if (e.target === panelInstrucciones) {
+    panelInstrucciones.classList.remove('abierto');
+  }
+});
+
+// Cerrar con tecla ESC
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    panelInstrucciones.classList.remove('abierto');
+  }
+});
 </script>
 </body>
 </html>
