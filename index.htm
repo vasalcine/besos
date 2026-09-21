@@ -158,6 +158,75 @@
     .btn-reclamar { padding: 14px 40px; font-size: 1.1em; }
     .contador { font-size: 0.95em; bottom: 14px; left: 15px; }
   }
+  
+  /* ===== BOTONES MULTIPLICADORES ===== */
+.multiplicadores {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 35px;
+  flex-wrap: wrap;
+}
+
+.btn-multiplicador {
+  background: #f5ecd7;
+  color: #3a2418;
+  border: 2px solid #b8a67d;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-family: 'Georgia', serif;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.4);
+  letter-spacing: 0.5px;
+  opacity: 0.5;
+  position: relative;
+}
+
+/* Estado bloqueado */
+.btn-multiplicador:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+  filter: grayscale(0.6);
+}
+
+/* Estado activo (habilitado desde Firebase) */
+.btn-multiplicador.activo {
+  opacity: 1;
+  filter: none;
+  border-color: #3a2418;
+  background: #f5ecd7;
+  box-shadow:
+    0 3px 10px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.5);
+}
+
+.btn-multiplicador.activo:hover {
+  background: #efe0c5;
+  transform: translateY(-2px);
+  box-shadow:
+    0 5px 14px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.5);
+}
+
+/* Estado seleccionado (activo y elegido) */
+.btn-multiplicador.seleccionado {
+  background: #3a2418;
+  color: #f5ecd7;
+  border-color: #3a2418;
+  box-shadow:
+    0 4px 14px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+  transform: translateY(-2px);
+}
+
+.btn-multiplicador.seleccionado:hover {
+  background: #4a3020;
+  color: #f5ecd7;
+}
 </style>
 </head>
 <body>
@@ -171,11 +240,20 @@
 
     <!-- BOTÓN RECLAMAR -->
     <button class="btn-reclamar" id="btnReclamar">Reclamar</button>
+    
+    <!-- BOTONES MULTIPLICADORES -->
+<div class="multiplicadores">
+  <button class="btn-multiplicador" id="mult-x2" data-valor="2" disabled>x2</button>
+  <button class="btn-multiplicador" id="mult-x3" data-valor="3" disabled>x3</button>
+  <button class="btn-multiplicador" id="mult-x4" data-valor="4" disabled>x4</button>
+  <button class="btn-multiplicador" id="mult-x10" data-valor="10" disabled>x10</button>
+</div>
 
     <!-- CONTADOR CON RELIEVE -->
     <div class="contador" id="contadorNumero">0</div>
   </div>
 
+<!-- SDK de Firebase (versión compat) -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
 
@@ -191,16 +269,66 @@
     appId: "1:1029695503526:web:d81dbaab9fd075a93ec867"
   };
 
-  /* ===== INICIALIZAR FIREBASE ===== */
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
   const contadorRef = db.ref('reclamos');
+  const multiplicadoresRef = db.ref('multiplicadores');
   const contadorNumero = document.getElementById('contadorNumero');
 
-  /* ===== ESCUCHAR CAMBIOS EN TIEMPO REAL ===== */
+  /* ===== ESTADO LOCAL ===== */
+  let multiplicadorActivo = 1;
+
+  /* ===== ESCUCHAR CONTADOR EN TIEMPO REAL ===== */
   contadorRef.on('value', (snapshot) => {
     const valor = snapshot.val() || 0;
     contadorNumero.textContent = valor;
+  });
+
+  /* ===== ESCUCHAR MULTIPLICADORES EN TIEMPO REAL ===== */
+  multiplicadoresRef.on('value', (snapshot) => {
+    const datos = snapshot.val() || { x2: false, x3: false, x4: false, x10: false };
+
+    // Actualizar cada botón según su estado
+    ['x2', 'x3', 'x4', 'x10'].forEach(id => {
+      const btn = document.getElementById('mult-' + id);
+      if (!btn) return;
+
+      if (datos[id] === true) {
+        btn.classList.add('activo');
+        btn.disabled = false;
+      } else {
+        btn.classList.remove('activo');
+        btn.disabled = true;
+        // Si estaba seleccionado y se desactiva, quitar selección
+        if (multiplicadorActivo === parseInt(id.replace('x', ''))) {
+          multiplicadorActivo = 1;
+          document.querySelectorAll('.btn-multiplicador').forEach(b => b.classList.remove('seleccionado'));
+        }
+      }
+    });
+  });
+
+  /* ===== SELECCIONAR MULTIPLICADOR ===== */
+  document.querySelectorAll('.btn-multiplicador').forEach(btn => {
+    btn.addEventListener('click', function() {
+      if (this.disabled) return;
+
+      const valor = parseInt(this.dataset.valor);
+
+      // Si ya está seleccionado, deseleccionar
+      if (multiplicadorActivo === valor) {
+        multiplicadorActivo = 1;
+        this.classList.remove('seleccionado');
+        return;
+      }
+
+      // Deseleccionar los demás
+      document.querySelectorAll('.btn-multiplicador').forEach(b => b.classList.remove('seleccionado'));
+
+      // Activar el nuevo
+      multiplicadorActivo = valor;
+      this.classList.add('seleccionado');
+    });
   });
 
   /* ===== EXPLOSIÓN DE BESOS ===== */
@@ -231,10 +359,7 @@
       document.body.appendChild(beso);
 
       beso.animate([
-        {
-          transform: `translate(-50%, -50%) scale(0.3) rotate(0deg)`,
-          opacity: 1
-        },
+        { transform: `translate(-50%, -50%) scale(0.3) rotate(0deg)`, opacity: 1 },
         {
           transform: `translate(calc(-50% + ${dx * 0.6}px), calc(-50% + ${dy * 0.6}px)) scale(${escala}) rotate(${rotacion * 0.5}deg)`,
           opacity: 1,
@@ -255,17 +380,28 @@
     }
   }
 
-  /* ===== BOTÓN RECLAMAR (con Firebase) ===== */
-  document.getElementById('btnReclamar').addEventListener('click', function(e) {
+  /* ===== BOTÓN RECLAMAR (con multiplicador) ===== */
+  document.getElementById('btnReclamar').addEventListener('click', function() {
     lanzarBesos(this);
 
-    // Incrementar en Firebase de forma segura
+    // Incrementar con el multiplicador activo
     contadorRef.transaction((valorActual) => {
-      return (valorActual || 0) + 1;
+      return (valorActual || 0) + multiplicadorActivo;
     });
+
+    // Resetear multiplicador a 1 después del clic
+    multiplicadorActivo = 1;
+    document.querySelectorAll('.btn-multiplicador').forEach(b => b.classList.remove('seleccionado'));
 
     this.style.transform = 'scale(0.95)';
     setTimeout(() => { this.style.transform = ''; }, 150);
+  });
+
+  /* ===== RESET SECRETO (doble clic en contador) ===== */
+  contadorNumero.addEventListener('dblclick', () => {
+    if (confirm('¿Resetear el contador a 0?')) {
+      contadorRef.set(0);
+    }
   });
 </script>
 </body>
