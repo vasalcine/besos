@@ -231,14 +231,14 @@
 /* ===== BOTÓN OCULTAR TARJETA ===== */
 .btn-ocultar {
   position: absolute;
-  top: 15px;
-  right: 60px;                  /* 👈 a la izquierda del foquito */
-  width: 38px;
-  height: 38px;
+  top: 12px;
+  right: 48px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: #f5ecd7;
   border: 2px solid #b8a67d;
-  font-size: 1.1em;
+  font-size: 0.85em;
   cursor: pointer;
   z-index: 30;
   display: flex;
@@ -310,14 +310,14 @@
 /* ===== BOTÓN FOCO ===== */
 .btn-foco {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 38px;
-  height: 38px;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: #f5ecd7;
   border: 2px solid #b8a67d;
-  font-size: 1.1em;
+  font-size: 0.85em;
   cursor: pointer;
   z-index: 30;
   display: flex;
@@ -427,82 +427,138 @@
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 500px) {
+  .tarjeta {
+    padding: 60px 22px 55px;    /* 👈 más espacio arriba para los botones */
+  }
+
+  /* Botón ocultar */
+  .btn-ocultar {
+    width: 34px;
+    height: 34px;
+    font-size: 0.95em;
+    top: 12px;
+    right: 54px;                /* 👈 alineado al lado del foquito */
+  }
+
+  /* Botón foco */
   .btn-foco {
     width: 34px;
     height: 34px;
-    font-size: 1em;
+    font-size: 0.95em;
     top: 12px;
     right: 12px;
   }
+
+  /* Texto principal: baja un poco para no chocar con los botones */
+  .texto-principal {
+    font-size: 1em;
+    margin-top: 10px;
+  }
+
+  /* Botón reclamar */
+  .btn-reclamar {
+    padding: 14px 40px;
+    font-size: 1.1em;
+  }
+
+  /* Contador */
+  .contador {
+    font-size: 0.95em;
+    bottom: 14px;
+    left: 15px;
+  }
+
+  /* Panel de instrucciones */
   .panel-contenido {
     padding: 30px 22px 25px;
   }
   .panel-contenido h2 { font-size: 1.2em; }
   .panel-contenido p { font-size: 0.9em; }
+
+  /* Botón mostrar */
+  .btn-mostrar {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1em;
+    top: 15px;
+    right: 15px;
+  }
+}
+@media (max-width: 360px) {
+  .tarjeta {
+    padding: 55px 18px 50px;
+  }
+  .btn-ocultar {
+    width: 30px;
+    height: 30px;
+    right: 48px;
+  }
+  .btn-foco {
+    width: 30px;
+    height: 30px;
+    right: 10px;
+  }
+  .btn-reclamar {
+    padding: 12px 30px;
+    font-size: 1em;
+  }
 }
 </style>
 </head>
 <body>
 
   <div class="tarjeta">
+
   <!-- BOTÓN OCULTAR TARJETA -->
-<button class="btn-ocultar" id="btnOcultar" title="Ocultar tarjeta">
-  👁️
-</button>
+  <button class="btn-ocultar" id="btnOcultar" title="Ocultar tarjeta">👁️</button>
 
-<!-- BOTÓN FOCO (ya existente) -->
-<button class="btn-foco" id="btnFoco" title="Instrucciones">
-  💡
-</button>
-  <!-- BOTÓN FOCO (arriba derecha) -->
-<button class="btn-foco" id="btnFoco" title="Instrucciones">
-  💡
-</button>
+  <!-- BOTÓN FOCO -->
+  <button class="btn-foco" id="btnFoco" title="Instrucciones">💡</button>
 
-<!-- PANEL DE INSTRUCCIONES -->
+  <!-- ✏️ TEXTO EDITABLE -->
+  <p class="texto-principal">
+    Escribe aquí el texto que quieras mostrar.<br>
+    Puedes cambiarlo cuando quieras.
+  </p>
+
+  <!-- BOTÓN RECLAMAR -->
+  <button class="btn-reclamar" id="btnReclamar">Reclamar</button>
+
+  <!-- BOTONES MULTIPLICADORES -->
+  <div class="multiplicadores">
+    <button class="btn-multiplicador" id="mult-x2" data-valor="2" disabled>x2</button>
+    <button class="btn-multiplicador" id="mult-x3" data-valor="3" disabled>x3</button>
+    <button class="btn-multiplicador" id="mult-x4" data-valor="4" disabled>x4</button>
+    <button class="btn-multiplicador" id="mult-x10" data-valor="10" disabled>x10</button>
+  </div>
+
+  <!-- CONTADOR CON RELIEVE -->
+  <div class="contador" id="contadorNumero">0</div>
+
+</div>
+
+<!-- PANEL DE INSTRUCCIONES (fuera de la tarjeta) -->
 <div class="panel-instrucciones" id="panelInstrucciones">
   <div class="panel-contenido">
     <button class="panel-cerrar" id="panelCerrar">✕</button>
     <h2>Instrucciones</h2>
-<p>
-  Usa esto en cualquier momento que desees. Cada clic en "Reclamar" te dará un besito mío en la frente, no hay límites.
-</p>
-<p>
-  También existen multiplicadores que se irán desbloqueando conforme te extrañe más. Estos multiplicadores potenciarán solo el siguiente clic que des para reclamar un beso mío.
-</p>
-<p>
-  Por último, se mostrará un contador que siempre se mantendrá actualizado. Quizá haya un premio al llegar a ciertas cantidades. Aún no te doy el tarifario 🙊
-</p>
-<p>
-  ¡Diviértete!
-</p>
-  </div>
-</div>
-</button>
-    <!-- ✏️ EDITA AQUÍ EL TEXTO -->
-    <p class="texto-principal">
-      Escribe aquí el texto que quieras mostrar.<br>
-      Puedes cambiarlo cuando quieras.
+    <p>
+      Usa esto en cualquier momento que desees. Cada clic en "Reclamar" te dará un besito mío en la frente, no hay límites.
     </p>
-
-    <!-- BOTÓN RECLAMAR -->
-    <button class="btn-reclamar" id="btnReclamar">Reclamar</button>
-    
-    <!-- BOTONES MULTIPLICADORES -->
-<div class="multiplicadores">
-  <button class="btn-multiplicador" id="mult-x2" data-valor="2" disabled>x2</button>
-  <button class="btn-multiplicador" id="mult-x3" data-valor="3" disabled>x3</button>
-  <button class="btn-multiplicador" id="mult-x4" data-valor="4" disabled>x4</button>
-  <button class="btn-multiplicador" id="mult-x10" data-valor="10" disabled>x10</button>
+    <p>
+      También existen multiplicadores que se irán desbloqueando conforme te extrañe más. Estos multiplicadores potenciarán solo el siguiente clic que des para reclamar un beso mío.
+    </p>
+    <p>
+      Por último, se mostrará un contador que siempre se mantendrá actualizado. Quizá haya un premio al llegar a ciertas cantidades. Aún no te doy el tarifario 🙊
+    </p>
+    <p>
+      ¡Diviértete!
+    </p>
+  </div>
 </div>
 
-    <!-- CONTADOR CON RELIEVE -->
-    <div class="contador" id="contadorNumero">0</div>
-  </div>
-  <!-- BOTÓN FLOTANTE PARA MOSTRAR TARJETA -->
-<button class="btn-mostrar" id="btnMostrar" title="Mostrar tarjeta">
-  👁️‍🗨️
-</button>
+<!-- BOTÓN FLOTANTE PARA MOSTRAR TARJETA -->
+<button class="btn-mostrar" id="btnMostrar" title="Mostrar tarjeta">👁️‍🗨️</button>
 
 <!-- SDK de Firebase (versión compat) -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
