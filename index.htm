@@ -7,12 +7,24 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  html, body {
-    height: 100%;
-    width: 100%;
-    font-family: 'Georgia', serif;
-    overflow: hidden;
-  }
+html, body {
+  height: 100%;
+  width: 100%;
+  font-family: 'Georgia', serif;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Evita el zoom en botones y campos */
+button, input, select, textarea {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
 
   /* ===== FONDO CON IMAGEN DE PARÍS ===== */
   body {
@@ -110,6 +122,12 @@
     letter-spacing: 1px;
     position: relative;
     z-index: 20;
+    touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  transition: transform 0.1s ease;
   }
   .btn-reclamar:hover {
     background: #5a3a28;
@@ -703,14 +721,35 @@ function lanzarBesos(btn) {
   }
 }
 
-  /* ===== BOTÓN RECLAMAR (con multiplicador) ===== */
-  document.getElementById('btnReclamar').addEventListener('click', function() {
-    lanzarBesos(this);
+  /* ===== BOTÓN PEDIR (con multiplicador y respuesta rápida) ===== */
+const btnReclamar = document.getElementById('btnReclamar');
+let bloqueado = false;
 
-    // Incrementar con el multiplicador activo
-    contadorRef.transaction((valorActual) => {
-      return (valorActual || 0) + multiplicadorActivo;
-    });
+btnReclamar.addEventListener('pointerdown', function(e) {
+  e.preventDefault();
+
+  // Micro-bloqueo para evitar duplicados en algunos navegadores
+  if (bloqueado) return;
+  bloqueado = true;
+  setTimeout(() => { bloqueado = false; }, 30); // 30ms es suficiente
+
+  lanzarBesos(this);
+
+  contadorRef.transaction((valorActual) => {
+    return (valorActual || 0) + multiplicadorActivo;
+  });
+
+  // Resetear multiplicador
+  multiplicadorActivo = 1;
+  document.querySelectorAll('.btn-multiplicador').forEach(b => b.classList.remove('seleccionado'));
+
+  // Feedback visual rápido
+  this.style.transform = 'scale(0.95)';
+  setTimeout(() => { this.style.transform = ''; }, 80);
+});
+
+// Bloquear el click por defecto (por si acaso)
+btnReclamar.addEventListener('click', (e) => e.preventDefault());
 
     // Resetear multiplicador a 1 después del clic
     multiplicadorActivo = 1;
