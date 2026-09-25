@@ -518,9 +518,9 @@
     <!-- BOTONES MULTIPLICADORES -->
     <div class="multiplicadores">
       <button class="btn-multiplicador" id="mult-x2" data-valor="2" disabled>x2</button>
-      <button class="btn-multiplicador" id="mult-x3" data-valor="3" disabled>x3</button>
-      <button class="btn-multiplicador" id="mult-x4" data-valor="4" disabled>x4</button>
       <button class="btn-multiplicador" id="mult-x10" data-valor="10" disabled>x10</button>
+      <button class="btn-multiplicador" id="mult-x30" data-valor="30" disabled>x30</button>
+      <button class="btn-multiplicador" id="mult-x100" data-valor="100" disabled>x100</button>
     </div>
 
     <!-- CONTADOR CON RELIEVE -->
@@ -584,9 +584,9 @@
 
     /* ===== ESCUCHAR MULTIPLICADORES EN TIEMPO REAL ===== */
     multiplicadoresRef.on('value', (snapshot) => {
-      const datos = snapshot.val() || { x2: false, x3: false, x4: false, x10: false };
+      const datos = snapshot.val() || { x2: false, x10: false, x30: false, x100: false };
 
-      ['x2', 'x3', 'x4', 'x10'].forEach(id => {
+      ['x2', 'x10', 'x30', 'x100'].forEach(id => {
         const btn = document.getElementById('mult-' + id);
         if (!btn) return;
 
