@@ -630,7 +630,7 @@
       const origenX = rect.left + rect.width / 2;
       const origenY = rect.top + rect.height / 2;
 
-      const total = multiplicadorActivo;
+      const total = Math.min(multiplicadorActivo,60);
 
       for (let i = 0; i < total; i++) {
         const beso = document.createElement('div');
